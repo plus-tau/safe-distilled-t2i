@@ -1,0 +1,15 @@
+torch==2.7.1
+torchvision==0.22.1
+diffusers==0.33.1
+transformers==4.52.3
+peft==0.18.0
+accelerate==1.7.0
+safetensors==0.5.3
+sentencepiece==0.2.0
+protobuf==6.31.0
+numpy==2.2.6
+Pillow==11.2.1
+PyYAML==6.0.2
+tqdm==4.67.1
+wandb==0.21.0
+bitsandbytes==0.49.0

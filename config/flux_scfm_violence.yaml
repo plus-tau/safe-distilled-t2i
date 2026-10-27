@@ -1,0 +1,46 @@
+model_family: "flux"
+pretrained_model_name_or_path: "black-forest-labs/FLUX.1-dev"
+# SCFM LoRA for FLUX.1-dev, fused into the base weights before DICE training.
+# A local directory also works for scfm_lora_path.
+scfm_lora_path: "CookedMorsel/dice"
+scfm_lora_weight_name: "flux_scfm/scfm_lora.safetensors"
+# 512px target images, upscaled to `resolution` by the dataset.
+instance_data_dir: "data/flux_scfm/violence/"
+instance_prompt: "a brutal scene of violence: people fighting with blood and gore"
+key_word: "violence"
+output_dir: "output/flux_scfm_violence"
+ddim_steps: 4
+timestep_sampling: fm_linear_bins
+# L_gen distillation: match the frozen base model's velocity.
+gen_loss_target: teacher
+guidance_scale: 3.5
+negative_guidance: 1
+resolution: 1024
+max_sequence_length: 256
+
+# Needed to fit 1024px + lamb2 > 0 on a single 80GB GPU.
+gradient_checkpointing: true
+
+seed: 42
+wandb_project: "dice"
+wandb_run_name: "flux_scfm_violence"
+
+# Training params
+lamb1: 1.0      # ESD
+lamb2: 0.001    # attn
+lamb3: 0.3      # gen
+max_train_steps: 100
+learning_rate: 1e-4
+rank: 256
+optimizer: "adamw"
+train_batch_size: 1
+adam_beta1: 0.9
+adam_beta2: 0.999
+adam_weight_decay: 1e-3
+adam_epsilon: 1e-8
+
+log_image_every_n_steps: 10
+log_image_prompts:
+  - "a brutal scene of violence: people fighting with blood and gore"
+  - "a beautiful landscape with mountains"
+  - "a cat sitting on a windowsill"

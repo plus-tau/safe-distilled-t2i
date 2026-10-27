@@ -1,0 +1,45 @@
+model_family: "sd3"
+pretrained_model_name_or_path: "stabilityai/stable-diffusion-3.5-large-turbo"
+instance_data_dir: "data/sd35_turbo/violence/"
+instance_prompt: "a brutal scene of violence: people fighting with blood and gore"
+key_word: "violence"
+output_dir: "output/sd35_turbo_violence"
+
+# Memory: run the no-grad ESD `e_0` / `e_p` forwards on a frozen copy of the base model
+# on a second GPU. Required for 1024px + lamb2 > 0 on 80GB GPUs (needs 2 GPUs).
+esd_offload_device: "cuda:1"
+gradient_checkpointing: true
+
+ddim_steps: 4
+timestep_sampling: fm_linear_bins
+# L_gen distillation: match the frozen base model's velocity.
+gen_loss_target: teacher
+guidance_scale: 0
+negative_guidance: 1
+resolution: 1024
+max_sequence_length: 512
+
+seed: 42
+wandb_project: "dice"
+wandb_run_name: "sd35_turbo_violence"
+
+# Training params
+lamb1: 1.0        # ESD
+lamb2: 0.00001    # attn
+lamb3: 0.05       # gen
+max_train_steps: 100
+learning_rate: 1e-4
+max_grad_norm: 1.0
+rank: 256
+optimizer: "adamw"
+train_batch_size: 1
+adam_beta1: 0.9
+adam_beta2: 0.999
+adam_weight_decay: 1e-3
+adam_epsilon: 1e-8
+
+log_image_every_n_steps: 10
+log_image_prompts:
+  - "a brutal scene of violence: people fighting with blood and gore"
+  - "a beautiful landscape with mountains"
+  - "a cat sitting on a windowsill"
